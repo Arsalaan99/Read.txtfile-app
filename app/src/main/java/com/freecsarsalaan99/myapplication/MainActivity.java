@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    ArrayList<Double> ecgdata;
+    ArrayList<Double> ecgdata =  new ArrayList<>();;
 
     GraphView graph;
 
@@ -36,8 +36,6 @@ public class MainActivity extends AppCompatActivity {
         InputStream is = this.getResources().openRawResource(R.raw.output);
         // String data = "";
 
-        ecgdata = new ArrayList<>();
-
         //StringBuffer sbuffer = new StringBuffer();
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
         StringBuilder text = new StringBuilder();
@@ -47,22 +45,25 @@ public class MainActivity extends AppCompatActivity {
             ArrayList<DataPoint> arrDataPoint=new ArrayList<>();
 
             while ((line = br.readLine()) != null) {
+
                 text.append(line);
                 Log.i("Test", "text : " + text + " :end");
                 text.append('\n');
                 ecgdata.add(Double.parseDouble(line));
+                DataPoint dp = new DataPoint(xVal, Double.parseDouble(line));
+                xVal += (fs / 7499.0); // fs/(no of samples-1)
+                arrDataPoint.add(dp);
 
             }
 
             br.close();
 
+
             DataPoint[] listDp = new DataPoint[ecgdata.size()];
-            Log.i("Int","Size of arrDataPoint : " + arrDataPoint.size());
+            Log.i("Int","Size of ecgdata : " + ecgdata.size());
 
             for(int i=0;i<ecgdata.size();i++){
-                DataPoint dp = new DataPoint(xVal, (Double) ecgdata.get(i));
-                xVal += (fs / (ecgdata.size() - 1));
-                arrDataPoint.add(dp);
+
                 listDp[i]=arrDataPoint.get(i);
             }
 
