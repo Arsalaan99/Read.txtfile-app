@@ -11,11 +11,11 @@ public class ReadandStore {
 
 
     ArrayList<Double> Data = new ArrayList<>();
-    int count = 0;
+
 
     public ArrayList<Double> ReadandStoring(InputStream is) {
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
-        StringBuilder text = new StringBuilder();
+
 
         try {
 
