@@ -29,14 +29,9 @@ public class MainActivity extends AppCompatActivity {
     int filterType = 2; //Can be 1 (for type 1) or 2 (for type 2)
     int rippleFactor = 1; //maximum ripple allowed below unity gain
     double fs = 200;
-    int order = 2; //order of the filter
+    int order = 1; //order of the filter
     double lowCutOff = 0.67; //Lower Cut-off Frequency
     double highCutOff = 40; //Higher Cut-off Frequency
-    double [] ecgdata = new double[10050];
-    int counter = 0;
-    GraphView graph;
-
-    Double xVal = 0.0;
 
     TextView textView;
 
@@ -49,11 +44,11 @@ public class MainActivity extends AppCompatActivity {
         textView.setMovementMethod(new ScrollingMovementMethod());
         GraphView graph = (GraphView) findViewById(R.id.graph);
 
-        ArrayList<DataPoint> arrDataPoint=new ArrayList<>();
-        ArrayList<DataPoint> arrDataPoint1=new ArrayList<>();
+        ArrayList<DataPoint> arrDataPoint = new ArrayList<>();
+        ArrayList<DataPoint> arrDataPoint1 = new ArrayList<>();
 
 
-        InputStream is = this.getResources().openRawResource(R.raw.output);
+        InputStream is = this.getResources().openRawResource(R.raw.ecg_data_1);
 
         ReadandStore RS = new ReadandStore();  //RS -> object created of class ReadandStore
         ArrayList<Double> AL= RS.ReadandStoring(is); // method accessed of class ReadandStore
@@ -68,14 +63,14 @@ public class MainActivity extends AppCompatActivity {
             Chebyshev flt = new Chebyshev(ecgdata, fs, filterType);
             double[] result = flt.bandPassFilter(order, lowCutOff, highCutOff, rippleFactor); //get the result after filtering
             Chebyshev flt1 = new Chebyshev(result, fs, filterType);
-            result = flt1.highPassFilter(order, highCutOff, rippleFactor);
+            result = flt1.highPassFilter(order, 10, rippleFactor);
 
             //Peak Detection of filtered Data
             peakDetection pd = new peakDetection();
             arrDataPoint1 = pd.ArrayofPeak(result, AL.size(), fs);
             arrDataPoint = pd.ArrayofFilteredSignal();
             StringBuilder Text = pd.IndexofString();
-
+            //arrDataPoint = pd.ArrayofFilteredSignal(ecgdata, AL.size(), fs);
             //converting to array of Datapoint.
             DataPoint[] listDp = new DataPoint[arrDataPoint.size()];
             DataPoint[] listDp1 = new DataPoint[arrDataPoint1.size()];
