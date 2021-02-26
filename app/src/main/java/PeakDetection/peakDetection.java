@@ -16,20 +16,35 @@ public class peakDetection {
         arrDataPoint1 = new ArrayList<>();
     }
 
-    double max(double [] result, int SIZE)
+
+    double max(double [] result)
     {
         double max = -999;
-        for (int i = 0; i < SIZE; i++)
+        for (int i = 0; i < result.length; i++)
             if (result[i] > max)
                 max = result[i];
         return max;
     }
 
-    public ArrayList<DataPoint> ArrayofPeak(double[] result, int SIZE, double fs){
-        double max = max(result, SIZE);
+    double avg(double result[]){
+        double sum = 0.0;
+
+        for (double num: result) {
+            sum += num;
+        }
+
+        double average = sum / result.length;
+
+        return average;
+    }
+
+    public ArrayList<DataPoint> ArrayofPeak(double[] result, double fs){
+        double step = 20.0/(result.length);
+        double max = max(result);
         threshold =  max - 0.4*max;
+        //threshold = max/avg(result);
         Text.append("R peak = [");
-        for(int i=0; i<SIZE; i++){
+        for(int i=0; i<result.length; i++){
             if(result[i] > threshold ){
                 if((result[i]>result[i-1]) && (result[i]>result[i+1]) && i>=1) {
                     Text.append(String.valueOf(i));
@@ -39,7 +54,7 @@ public class peakDetection {
                 }
             }
             DataPoint dp = new DataPoint(xVal, result[i]);
-            xVal += (fs / (SIZE-1)); // fs/(no of samples-1)
+            xVal += (step); // time(in secs)/(no of samples)
             arrDataPoint.add(dp);
         }
 
@@ -51,18 +66,20 @@ public class peakDetection {
         return arrDataPoint;
     }
 
-    public ArrayList<DataPoint> ArrayofFilteredSignal(double[] result, int SIZE, double fs){
-        for(int i=0; i<SIZE; i++){
-            DataPoint dp = new DataPoint(xVal, result[i]);
-            xVal += (fs / (SIZE-1)); // fs/(no of samples-1)
-            arrDataPoint.add(dp);
+    public ArrayList<DataPoint> ArrayofFilteredSignal(double[] result1, double fs){
+        double val =0.0;
+        double step = 20.0/(result1.length);
+        ArrayList<DataPoint> arrDP = new ArrayList<>();
+        for(int i=0; i<result1.length; i++){
+            DataPoint dp = new DataPoint(val, result1[i]);
+            val += (step); // fs/(no of samples-1)
+            arrDP.add(dp);
         }
-        return arrDataPoint;
+        return arrDP;
     }
 
     public StringBuilder IndexofString(){
         return Text;
     }
-
 
 }

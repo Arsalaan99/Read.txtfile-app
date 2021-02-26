@@ -1,7 +1,6 @@
 package PlottingOfData;
 
 
-
 import android.graphics.Color;
 
 import com.jjoe64.graphview.GraphView;
@@ -15,25 +14,28 @@ import com.jjoe64.graphview.series.PointsGraphSeries;
 
 
     public void plotECG(LineGraphSeries<DataPoint> series, GraphView graph){
+        this.series = series;
         graph.addSeries(series);
 
     }
      public void plotPeak(PointsGraphSeries<DataPoint> series2, GraphView graph){
+        this.series2 = series2;
          series2.setSize(10);
          series2.setColor(Color.RED);
          graph.addSeries(series2);
 
      }
+
      public void SetXYaxis(GraphView graph){
          graph.getViewport().setXAxisBoundsManual(true);
          graph.getViewport().setMinX(0);
-         graph.getViewport().setMaxX(10);
+         graph.getViewport().setMaxX(20);
 
          graph.getViewport().setYAxisBoundsManual(true);
-         graph.getViewport().setMinY(-1);
-         graph.getViewport().setMaxY(2);
+         graph.getViewport().setMinY(-0.2);
+         graph.getViewport().setMaxY(0.2);
 
-         graph.getViewport().setScrollable(true); // enables horizontal scrolling
+         graph.getViewport().setScrollableY(true); // enables horizontal scrolling
          graph.getViewport().setScrollable(true); // enables vertical scrolling
      }
 }
