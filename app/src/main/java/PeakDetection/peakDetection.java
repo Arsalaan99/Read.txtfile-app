@@ -41,7 +41,7 @@ public class peakDetection {
     public ArrayList<DataPoint> ArrayofPeak(double[] result, double fs){
         double step = 20.0/(result.length);
         double max = max(result);
-        threshold =  max - 0.4*max;
+        threshold =  max - 0.5*max;
         //threshold = max/avg(result);
         Text.append("R peak = [");
         for(int i=0; i<result.length; i++){

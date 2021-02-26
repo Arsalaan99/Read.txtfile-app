@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<DataPoint> arrDataPoint1 = new ArrayList<>();
 
 
-        InputStream is = this.getResources().openRawResource(R.raw.ecg_data_9);
+        InputStream is = this.getResources().openRawResource(R.raw.ecg_data_6);
 
         ReadandStore RS = new ReadandStore();  //RS -> object created of class ReadandStore
         ArrayList<Double> AL= RS.ReadandStoring(is); // method accessed of class ReadandStore
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             result1 = flt3.highPassFilter(10, 0.67);
 
             Bessel flt4 = new Bessel(result1, fs);
-            double []result2 = flt4.highPassFilter(4, 0.67);
+            double []result2 = flt4.highPassFilter(4, 8);
 
             /*Bessel flt = new Bessel(result1, fs);
             double []result2 = flt.highPassFilter(10, 0.67);*/
@@ -106,10 +106,10 @@ public class MainActivity extends AppCompatActivity {
 
             //Peak Detection of filtered Data
             peakDetection pd = new peakDetection();
-            arrDataPoint1 = pd.ArrayofPeak(slice_ecgdata_f1, fs);
+            arrDataPoint1 = pd.ArrayofPeak(slice_ecgdata_f2, fs);
             //arrDataPoint = pd.ArrayofFilteredSignal();
             StringBuilder Text = pd.IndexofString();
-            arrDataPoint = pd.ArrayofFilteredSignal(slice_ecgdata_f2, fs);
+            arrDataPoint = pd.ArrayofFilteredSignal(slice_ecgdata_f1, fs);
             //converting to array of Datapoint.
             DataPoint[] listDp = new DataPoint[arrDataPoint.size()];
             DataPoint[] listDp1 = new DataPoint[arrDataPoint1.size()];
