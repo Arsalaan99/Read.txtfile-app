@@ -38,12 +38,35 @@ public class peakDetection {
         return average;
     }
 
+    public ArrayList<Integer> Arrayofindex_Peak(double[] result){
+        ArrayList<Integer> res = new ArrayList<>();
+        double max = max(result);
+        threshold =  max - 0.5*max;
+
+        for(int i=0; i<result.length; i++){
+            if(result[i] > threshold ){
+                if((result[i]>result[i-1]) && (result[i]>result[i+1]) && i>=1) {
+                    res.add(i);
+
+
+                }
+            }
+        }
+
+        return  res;
+
+    }
+
+
+
+
     public ArrayList<DataPoint> ArrayofPeak(double[] result, double fs){
-        double step = 20.0/(result.length);
+        double step = 20.0/(result.length);   //total_time/no of samples.
         double max = max(result);
         threshold =  max - 0.5*max;
         //threshold = max/avg(result);
         Text.append("R peak = [");
+
         for(int i=0; i<result.length; i++){
             if(result[i] > threshold ){
                 if((result[i]>result[i-1]) && (result[i]>result[i+1]) && i>=1) {
