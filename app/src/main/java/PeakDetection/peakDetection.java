@@ -7,10 +7,12 @@ import java.util.ArrayList;
 public class peakDetection {
     double xVal =0.0;
     StringBuilder Text;
+    StringBuilder Array_of_filter_sig;
     ArrayList<DataPoint> arrDataPoint;
     ArrayList<DataPoint> arrDataPoint1;
     double threshold;
     public peakDetection(){
+        Array_of_filter_sig = new StringBuilder();
         Text = new StringBuilder();
         arrDataPoint = new ArrayList<>();
         arrDataPoint1 = new ArrayList<>();
@@ -75,14 +77,14 @@ public class peakDetection {
     public ArrayList<DataPoint> ArrayofPeak(double[] result, double fs){
         double step = 20.0/(result.length);   //total_time/no of samples.
         double max = max(result);
-        threshold =  max - 0.5*max;
+        threshold =  max - 0.2*max;
 
         //threshold = max/avg(result);
         Text.append("R peak = [");
 
-        for(int i=0; i<result.length; i++){
+        for(int i=1; i<result.length-1; i++){
             if(result[i] > threshold ){
-                if((result[i]>result[i-1]) && (result[i]>result[i+1]) && i>=1) {
+                if((result[i]>result[i-1]) && (result[i]>result[i+1]) ) {
                     Text.append(String.valueOf(i));
                     Text.append("  ");
                     DataPoint dp1 = new DataPoint(xVal, result[i]);
@@ -113,13 +115,17 @@ public class peakDetection {
         double step = 20.0/(result1.length);
         ArrayList<DataPoint> arrDP = new ArrayList<>();
         for(int i=0; i<result1.length; i++){
+            Array_of_filter_sig.append(String.valueOf(result1[i]));
+            Array_of_filter_sig.append("\n");
             DataPoint dp = new DataPoint(val, result1[i]);
             val += (step); // fs/(no of samples-1)
             arrDP.add(dp);
         }
         return arrDP;
     }
-
+    public StringBuilder Mag_of_filt_sig(){
+        return Array_of_filter_sig;
+    }
     public StringBuilder IndexofString(){
         return Text;
     }
