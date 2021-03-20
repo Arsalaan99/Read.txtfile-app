@@ -26,6 +26,18 @@ public class peakDetection {
         return max;
     }
 
+    int max_index(double [] slice_ecgdata_f2, int start, int end)
+    {
+        double max = -999;
+        int index=0;
+        for (int i = start; i <= end; i++)
+            if (slice_ecgdata_f2[i] > max) {
+                max = slice_ecgdata_f2[i];
+                index = i;
+            }
+        return index;
+    }
+
     double avg(double result[]){
         double sum = 0.0;
 
@@ -38,12 +50,36 @@ public class peakDetection {
         return average;
     }
 
-    public ArrayList<DataPoint> ArrayofPeak(double[] result, double fs){
-        double step = 20.0/(result.length);
+    public ArrayList<Integer> Arrayofindex_Peak(double[] result){
+        ArrayList<Integer> res = new ArrayList<>();
         double max = max(result);
         threshold =  max - 0.5*max;
+
+        for(int i=0; i<result.length; i++){
+            if(result[i] > threshold ){
+                if((result[i]>result[i-1]) && (result[i]>result[i+1]) && i>=1) {
+                    res.add(i);
+
+
+                }
+            }
+        }
+
+        return  res;
+
+    }
+
+
+
+
+    public ArrayList<DataPoint> ArrayofPeak(double[] result, double fs){
+        double step = 20.0/(result.length);   //total_time/no of samples.
+        double max = max(result);
+        threshold =  max - 0.5*max;
+
         //threshold = max/avg(result);
         Text.append("R peak = [");
+
         for(int i=0; i<result.length; i++){
             if(result[i] > threshold ){
                 if((result[i]>result[i-1]) && (result[i]>result[i+1]) && i>=1) {
@@ -64,6 +100,12 @@ public class peakDetection {
 
     public ArrayList<DataPoint> ArrayofFilteredSignal(){
         return arrDataPoint;
+    }
+
+    public double threshold(double []slice_ecgdata_f2){
+        double max = max(slice_ecgdata_f2);
+        threshold =  max - 0.5*max;
+        return threshold;
     }
 
     public ArrayList<DataPoint> ArrayofFilteredSignal(double[] result1, double fs){
