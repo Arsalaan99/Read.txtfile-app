@@ -21,8 +21,9 @@ public class robustPeakDetection {
         return  detected_pk;
     }*/
 
-    public int heart_rate(double []slice_ecgdata_f2, double sampling_rate){
-        /*this.total_win_size = total_win_size;
+
+
+    /*this.total_win_size = total_win_size;
         this.sampling_rate = sampling_rate;
         int win_size = 6;
         int start = 0;
@@ -34,12 +35,17 @@ public class robustPeakDetection {
         }
 
         return ((double)tot_pk/(total_win_size/win_size));*/
+
+
+    public int heart_rate(double []slice_ecgdata_f2, double sampling_rate){
+
         this.sampling_rate = sampling_rate;
         peakDetection pd = new peakDetection();
         ArrayList<Integer> pk = pd.Arrayofindex_Peak(slice_ecgdata_f2);
         Integer sum = 0;
         ArrayList<Integer> RR_Intervel = new ArrayList<>();
-
+        Text.append("\n");
+        Text.append("RR Interval = ");
         Text.append("[ ");
         for (int i = 1; i <= pk.size() - 1; ++i) {
             //sum += (pk.get(i) - pk.get(i-1));
@@ -55,7 +61,7 @@ public class robustPeakDetection {
 
         heart_rate = (int) (Math.round(sampling_rate*60)/(sum.doubleValue()/RR_Intervel.size()));
 
-        Text.append("\n\n"+ "Heart Rate = "+(sampling_rate*60)/(sum.doubleValue()/RR_Intervel.size()));
+        Text.append("\n\n"+ "Heart Rate = "+heart_rate);
 
 
         return heart_rate;
@@ -123,7 +129,7 @@ public class robustPeakDetection {
                     break;
                 }
 
-                int pk = pd.max_index(slice_ecgdata_f2, start, end) + start;
+                int pk = pd.max_index(slice_ecgdata_f2, start, end);
 
                 if(((pk - prev_pk) < var*first_derivative) && min_ht < slice_ecgdata_f2[pk]){
                     R.add(pk);
