@@ -1,20 +1,21 @@
 package com.freecsarsalaan99.myapplication;
 
-import uk.me.berndporr.iirj.*;
+
 import android.os.Bundle;
+
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-/*import com.github.psambit9791.jdsp.filter.Bessel;
-import com.github.psambit9791.jdsp.filter.Butterworth;*/
+
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.PointsGraphSeries;
 
-import org.w3c.dom.Text;
+
 
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -27,18 +28,10 @@ import PlottingOfData.plottingofdata;
 import ReadsandStores.ReadandStore;
 import Ecgfilter.ecgfilter;
 
-/*import android.util.Log;*/
-/*import com.github.psambit9791.jdsp.filter.Butterworth;
-import com.github.psambit9791.jdsp.filter.Chebyshev;*/
-/*import java.io.BufferedReader;
-import java.io.IOException;*/
-//import java.io.InputStreamReader;
-//import java.util.Collections;
+
 
 public class MainActivity extends AppCompatActivity {
 
-    //int filterType = 2; //Can be 1 (for type 1) or 2 (for type 2)
-    //int rippleFactor = 1; //maximum ripple allowed below unity gain
     double fs = 500;
     int order = 2; //order of the filter
     double lowCutOff = 0.67; //Lower Cut-off Frequency
@@ -56,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         GraphView graph = (GraphView) findViewById(R.id.graph);
         GraphView graph1 = findViewById(R.id.graph1);
 
+
         ArrayList<DataPoint> arrDataPoint;
         ArrayList<DataPoint> arrDataPoint1;
         ArrayList<DataPoint> arrDataPointd;
@@ -66,15 +60,13 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Double> AL = RS.ReadandStoring(is); // method accessed of class ReadandStore
 
         double[] ecgdata = new double[AL.size()];   // double array of data to pass it to filter
-        double xVal =0.0;
+        //double xVal =0.0;
 
         for (int i = 0; i < AL.size(); i++) {
 
             Double truncatedDouble = BigDecimal.valueOf(AL.get(i)).setScale(4, RoundingMode.HALF_UP).doubleValue();
             ecgdata[i] = truncatedDouble;
-            /*DataPoint dp = new DataPoint(xVal, ecgdata[i]);
-            xVal += (60.0/AL.size());
-            arrDataPointd.add(dp);*/
+
         }
 
 
@@ -82,25 +74,6 @@ public class MainActivity extends AppCompatActivity {
         ecgfilter ef = new ecgfilter();   //created ef object of ecgfilter class
         double[] result1 = ef.filter1(ecgdata, fs, lowCutOff, highCutOff);
         double[] result2 = ef.filter2(result1, fs, 8, highCutOff);
-        /*Butterworth butterworth = new Butterworth();
-        butterworth.bandPass(2,fs,(lowCutOff+highCutOff)/2.0,highCutOff - lowCutOff);
-        double[] result1 = new double[ecgdata.length];
-
-        for (int i=0; i<ecgdata.length; i++){
-            result1[i] = butterworth.filter(ecgdata[i]);
-        }
-
-        double[] result2 = new double[result1.length];
-
-        for (int i=0; i<ecgdata.length; i++){
-            result2[i] = butterworth.filter(result1[i]);
-        }*/
-
-
-
-
-
-
 
 
 
@@ -113,21 +86,22 @@ public class MainActivity extends AppCompatActivity {
         if (slice_ecgdata_f2.length >= 0)
             System.arraycopy(result2, 1000, slice_ecgdata_f2, 0, slice_ecgdata_f2.length);
 
-
-        //double[] result2 = flt.bandPassFilter(1,0.67, 40);
+        double[] slice_ecgdata_f3 = new double[ecgdata.length - 1000];
+        if (slice_ecgdata_f3.length >= 0)
+            System.arraycopy(ecgdata, 1000, slice_ecgdata_f3, 0, slice_ecgdata_f3.length);
 
 
         //Peak Detection of filtered Data
 
-        //double total_win_size = result2.length/fs;
-
         peakDetection pd = new peakDetection();
-        arrDataPoint1 = pd.ArrayofPeak(slice_ecgdata_f2, fs);
-        //arrDataPoint = pd.ArrayofFilteredSignal();
-        StringBuilder Text = pd.IndexofString();
-        arrDataPoint = pd.ArrayofFilteredSignal(slice_ecgdata_f2, fs);
-        arrDataPointd = pd.ArrayofFilteredSignal(ecgdata, fs);
-        //StringBuilder Text = pd.Mag_of_filt_sig();
+        //arrDataPoint1 = pd.ArrayofDP_Peak(slice_ecgdata_f2, fs);
+        //arrDataPoint = pd.ArrayofDP_FilteredSignal();
+        //StringBuilder Text = pd.IndexOf_RPeak();
+        arrDataPoint = pd.ArrayofDP_Signal(slice_ecgdata_f3, fs);   //arrData for Raw Data for graph 2.
+        //arrDataPoint = pd.ArrayofDP_Signal(slice_ecgdata_f2, fs);     //arrData for Filtered data for graph 2.
+        //arrDataPointd = pd.ArrayofDP_Signal(ecgdata, fs);       // arrData for raw data for graph 1.
+
+        //StringBuilder Text = pd.Mag_of_sig();
 
 
         //Robust Peak Detection.
@@ -135,14 +109,22 @@ public class MainActivity extends AppCompatActivity {
         robustPeakDetection rpd = new robustPeakDetection();
         //int heart_rate = rpd.heart_rate(slice_ecgdata_f2, fs);
         ArrayList<Integer> R_pk = rpd.R_Peaks(slice_ecgdata_f2, sampling_rate);
-
-        ArrayList<DataPoint> arrDataPoint2 = new ArrayList<>();
+        //ArrayList<Integer> Q_pk = rpd.q_peak_find(ecgdata, R_pk, 8,20, fs);
+        //ArrayList<Integer> new_Rpk = rpd.Correct_rpeaks(slice_ecgdata_f2, R_pk, sampling_rate);
+        ArrayList<DataPoint> arrDataPointp = new ArrayList<>();
+        //ArrayList<DataPoint> arrDataPointq = new ArrayList<>();
 
         double step = 20.0/(slice_ecgdata_f2.length);
         for(int i=0; i<R_pk.size(); i++){
-                DataPoint dp = new DataPoint(R_pk.get(i)*step, slice_ecgdata_f2[R_pk.get(i)]);
-                arrDataPoint2.add(dp);
+                DataPoint dp = new DataPoint(R_pk.get(i)*step, ecgdata[999+R_pk.get(i)]);
+                arrDataPointp.add(dp);
+                //Log.e("new R pk for loop", toString(i));
         }
+
+       /* for(int i=0; i<Q_pk.size(); i++){
+            DataPoint dp = new DataPoint(Q_pk.get(i)*step, ecgdata[999+Q_pk.get(i)]);
+            arrDataPointq.add(dp);
+        }*/
 
 
         StringBuilder R = new StringBuilder();
@@ -151,6 +133,11 @@ public class MainActivity extends AppCompatActivity {
             R.append(R_pk.get(i) + "  ");
         }
         R.append(" ]");
+        /*R.append("\n[");
+        for(int i=0; i<Q_pk.size(); i++){
+            R.append(Q_pk.get(i) + "  ");
+        }
+        R.append("]");*/
 
         ArrayList<Boolean> missing_R = rpd.getMissing_R();
         StringBuilder missing_r = new StringBuilder();
@@ -166,8 +153,10 @@ public class MainActivity extends AppCompatActivity {
 
         //converting to array of Datapoint.
         DataPoint[] listDp = new DataPoint[arrDataPoint.size()];
-        DataPoint[] listDp1 = new DataPoint[arrDataPoint2.size()];
-        DataPoint[] listDpd = new DataPoint[arrDataPointd.size()];
+        DataPoint[] listDpp = new DataPoint[arrDataPointp.size()];
+        //DataPoint[] listDpq = new DataPoint[arrDataPointq.size()];
+
+        //DataPoint[] listDpd = new DataPoint[arrDataPointd.size()];
 
 
         for (int i = 0; i < arrDataPoint.size(); i++) {
@@ -175,29 +164,36 @@ public class MainActivity extends AppCompatActivity {
             listDp[i] = arrDataPoint.get(i);
         }
 
-        for (int i = 0; i < arrDataPoint2.size(); i++) {
+        for (int i = 0; i < arrDataPointp.size(); i++) {
 
-            listDp1[i] = arrDataPoint2.get(i);
+            listDpp[i] = arrDataPointp.get(i);
         }
 
-        for (int i = 0; i < arrDataPointd.size(); i++) {
+        /*for (int i = 0; i < arrDataPointq.size(); i++) {
+
+            listDpq[i] = arrDataPointq.get(i);
+        }*/
+
+        /*for (int i = 0; i < arrDataPointd.size(); i++) {
 
             listDpd[i] = arrDataPointd.get(i);
-        }
+        }*/
 
         //Plotting of Data.
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(listDp);
-        LineGraphSeries<DataPoint> series3 = new LineGraphSeries<>(listDpd);
-        PointsGraphSeries<DataPoint> series2 = new PointsGraphSeries<>(listDp1);
-
+        //LineGraphSeries<DataPoint> series3 = new LineGraphSeries<>(listDpd);
+        PointsGraphSeries<DataPoint> series2 = new PointsGraphSeries<>(listDpp);
+        //PointsGraphSeries<DataPoint> series3 = new PointsGraphSeries<>(listDpq);
 
         plottingofdata plot = new plottingofdata();
         plot.plot_FILTEREDECG(series, graph1);
-        plot.plot_RAWECG(series3, graph);
+        plot.plot_RAWECG(series, graph);
         plot.plotPeak(series2, graph1);
+        //plot.plotPeak(series3, graph1);
         plot.SetXYaxis(graph);
         plot.SetXYaxis(graph1);
 
+        //textView.setText(R.toString());
         //textView.setText(Text.toString()+ '\n' + RR_Interval);
         /*textView.setText(Text.toString() + "\n\n" +"RR Interval Array = "+ RR_Interval+ "\n\n" +
                 R.toString() + "\n\n" + missing_r.toString());*/   // index of R peaks

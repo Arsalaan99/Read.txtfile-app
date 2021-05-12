@@ -38,8 +38,8 @@ import com.jjoe64.graphview.series.PointsGraphSeries;
          graph.getViewport().setMaxX(10);
 
          graph.getViewport().setYAxisBoundsManual(true);
-         graph.getViewport().setMinY(-0.2);
-         graph.getViewport().setMaxY(0.2);
+         graph.getViewport().setMinY(0.8);
+         graph.getViewport().setMaxY(1.1);
 
          graph.getViewport().setScrollableY(true); // enables horizontal scrolling
          graph.getViewport().setScrollable(true); // enables vertical scrolling

@@ -1,6 +1,13 @@
 package PeakDetection;
 
+import android.util.Log;
+
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+import Ecgfilter.ecgfilter;
 
 public class robustPeakDetection {
     //int total_win_size;
@@ -9,32 +16,6 @@ public class robustPeakDetection {
     StringBuilder Text = new StringBuilder();
     ArrayList<Boolean> missing_R;
 
-
-   /* public ArrayList<Double> window(double[] slice_ecgdata_f2, int win_size, int start){
-        double[] res = new double[win_size*sampling_rate];
-        for(int i=start, j=0; i<win_size*sampling_rate; i++,j++){
-            res[j] = slice_ecgdata_f2[i];
-        }
-
-        peakDetection pd = new peakDetection();
-        ArrayList<Double> detected_pk = pd.Arrayofindex_Peak(res);
-        return  detected_pk;
-    }*/
-
-
-
-    /*this.total_win_size = total_win_size;
-        this.sampling_rate = sampling_rate;
-        int win_size = 6;
-        int start = 0;
-        int tot_pk = 0;
-        for(int i=1; i<=(total_win_size/win_size); i++){
-            ArrayList<Double> detected_pk = window(slice_ecgdata_f2, win_size, start);
-            tot_pk +=(detected_pk.size());
-            start += (win_size*sampling_rate);
-        }
-
-        return ((double)tot_pk/(total_win_size/win_size));*/
 
 
     public int heart_rate(double []slice_ecgdata_f2, double sampling_rate){
@@ -152,6 +133,65 @@ public class robustPeakDetection {
 
         return R;
 
+    }
+
+    public ArrayList<Integer> Correct_rpeaks(double[] slice_ecgdata_f2, ArrayList<Integer> R, double sampling_rate){
+        int tol = (int)(0.05 * sampling_rate);
+        int length = slice_ecgdata_f2.length;
+        ArrayList<Integer> newR = new ArrayList<>();
+        //Set<Integer> newR = new HashSet<Integer>();
+        peakDetection pd = new peakDetection();
+
+        for(int i=0; i<R.size(); i++){
+            int a = R.get(i) - tol;
+            if (a < 0) {
+                continue;
+            }
+            int b = R.get(i) + tol;
+            if (b > (length)) {
+                break;
+            }
+            newR.add(a + pd.max_index(slice_ecgdata_f2, a, b));
+        }
+
+        /*ArrayList<Integer> newR_list = new ArrayList<>();
+        for(int i: newR){
+            newR_list.add(i);
+        }
+        Collections.sort(newR_list);
+        for(int i:newR_list){
+            Log.isLoggable("correct r peak index", i);
+        }*/
+        return newR;
+    }
+
+    public ArrayList<Integer> q_peak_find(double [] ecgdata, ArrayList<Integer> R, double fl, double fh ,double sampling_rate){
+        // Passed raw ecgdata through filter1 and filter2
+        ecgfilter ef = new ecgfilter();   //created ef object of ecgfilter class
+        double[] result1 = ef.filter1(ecgdata, sampling_rate, fl, fh);
+        double[] result2 = ef.filter2(result1, sampling_rate, fl, fh);
+
+        double[] slice_ecgdata_f2 = new double[result2.length - 1000];
+        if (slice_ecgdata_f2.length >= 0)
+            System.arraycopy(result2, 1000, slice_ecgdata_f2, 0, slice_ecgdata_f2.length);
+
+        int before = (int) (0.2 * sampling_rate);
+        int _diff = 0;
+        ArrayList<Integer> q_peaks = new ArrayList<>();
+
+        for(int r=0; r<R.size(); r++){
+            int a = R.get(r) - before;
+
+            for (int bck=R.get(r); bck>a; bck--){
+                _diff = Integer.signum((int) (slice_ecgdata_f2[bck] - slice_ecgdata_f2[bck-1]))- Integer.signum((int) (slice_ecgdata_f2[bck-1] - slice_ecgdata_f2[bck-2]));
+                if(_diff > 0){
+                    Log.d("Q peaks Index", String.valueOf(bck-2));
+                    q_peaks.add(bck-2);
+                    break;
+                }
+            }
+        }
+        return q_peaks;
     }
 
     public ArrayList<Boolean> getMissing_R(){

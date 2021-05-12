@@ -24,19 +24,18 @@
         android:layout_height="300dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.839"
+        app:layout_constraintVertical_bias="0.823"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="25dp" />
 
 
-    <!--  <TextView
-          android:id="@+id/text"
-          android:layout_width="401dp"
-          android:layout_height="300dp"
-          app:layout_constraintBottom_toBottomOf="parent"
-          app:layout_constraintTop_toTopOf="parent"
-          app:layout_constraintVertical_bias="0.995"
-          app:layout_constraintHorizontal_bias="0.995"
-          tools:layout_editor_absoluteX="5dp"
-          tools:ignore="MissingConstraints" /> -->
+    <!--<TextView
+        android:id="@+id/text"
+        android:layout_width="402dp"
+        android:layout_height="115dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/graph1"
+        app:layout_constraintVertical_bias="1.0"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="4dp" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>
