@@ -44,9 +44,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //textView = findViewById(R.id.text);
-        //textView.setMovementMethod(new ScrollingMovementMethod());
-        GraphView graph = (GraphView) findViewById(R.id.graph);
+        textView = findViewById(R.id.text);
+        textView.setMovementMethod(new ScrollingMovementMethod());
+        //GraphView graph = (GraphView) findViewById(R.id.graph);
         GraphView graph1 = findViewById(R.id.graph1);
 
 
@@ -128,9 +128,29 @@ public class MainActivity extends AppCompatActivity {
 
 
         StringBuilder R = new StringBuilder();
-        R.append("new R peak = [ ");
+        R.append("R peak = [ ");
         for(int i=0; i<R_pk.size(); i++){
             R.append(R_pk.get(i) + "  ");
+        }
+        R.append(" ]");
+        R.append("\n\nQ peak = [ ");
+        for(int i=0; i<R_pk.size(); i++){
+            R.append(R_pk.get(i)-13 + "  ");
+        }
+        R.append(" ]");
+        R.append("\n\nP peak = [ ");
+        for(int i=0; i<R_pk.size(); i++){
+            R.append(R_pk.get(i)-33 + "  ");
+        }
+        R.append(" ]");
+        R.append("\n\nS peak = [ ");
+        for(int i=0; i<R_pk.size(); i++){
+            R.append(R_pk.get(i)+23 + "  ");
+        }
+        R.append(" ]");
+        R.append("\n\nT peak = [ ");
+        for(int i=0; i<R_pk.size(); i++){
+            R.append(R_pk.get(i)+48 + "  ");
         }
         R.append(" ]");
         /*R.append("\n[");
@@ -187,13 +207,13 @@ public class MainActivity extends AppCompatActivity {
 
         plottingofdata plot = new plottingofdata();
         plot.plot_FILTEREDECG(series, graph1);
-        plot.plot_RAWECG(series, graph);
+        //plot.plot_RAWECG(series, graph);
         plot.plotPeak(series2, graph1);
         //plot.plotPeak(series3, graph1);
-        plot.SetXYaxis(graph);
+        //plot.SetXYaxis(graph);
         plot.SetXYaxis(graph1);
 
-        //textView.setText(R.toString());
+        textView.setText(R.toString());
         //textView.setText(Text.toString()+ '\n' + RR_Interval);
         /*textView.setText(Text.toString() + "\n\n" +"RR Interval Array = "+ RR_Interval+ "\n\n" +
                 R.toString() + "\n\n" + missing_r.toString());*/   // index of R peaks

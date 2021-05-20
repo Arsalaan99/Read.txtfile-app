@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
 
-    <com.jjoe64.graphview.GraphView
+    <!--<com.jjoe64.graphview.GraphView
         android:id="@+id/graph"
         android:layout_width="360dp"
         android:layout_height="300dp"
@@ -16,7 +16,8 @@
         app:layout_constraintVertical_bias="0.009"
         app:layout_constraintHorizontal_bias="0.009"
         tools:layout_editor_absoluteX="25dp"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints" />-->
+
 
     <com.jjoe64.graphview.GraphView
         android:id="@+id/graph1"
@@ -24,18 +25,17 @@
         android:layout_height="300dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.823"
+        app:layout_constraintVertical_bias="0.062"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="25dp" />
 
-
-    <!--<TextView
+    <TextView
         android:id="@+id/text"
-        android:layout_width="402dp"
-        android:layout_height="115dp"
+        android:layout_width="395dp"
+        android:layout_height="302dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/graph1"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintVertical_bias="0.403"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="4dp" />-->
+        tools:layout_editor_absoluteX="11dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
