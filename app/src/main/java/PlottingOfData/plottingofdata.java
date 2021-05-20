@@ -35,11 +35,11 @@ import com.jjoe64.graphview.series.PointsGraphSeries;
      public void SetXYaxis(GraphView graph){
          graph.getViewport().setXAxisBoundsManual(true);
          graph.getViewport().setMinX(0);
-         graph.getViewport().setMaxX(10);
+         graph.getViewport().setMaxX(5);
 
          graph.getViewport().setYAxisBoundsManual(true);
-         graph.getViewport().setMinY(0.8);
-         graph.getViewport().setMaxY(1.1);
+         graph.getViewport().setMinY(0.5);
+         graph.getViewport().setMaxY(2.5);
 
          graph.getViewport().setScrollableY(true); // enables horizontal scrolling
          graph.getViewport().setScrollable(true); // enables vertical scrolling

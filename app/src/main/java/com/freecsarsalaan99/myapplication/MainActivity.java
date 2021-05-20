@@ -32,7 +32,7 @@ import Ecgfilter.ecgfilter;
 
 public class MainActivity extends AppCompatActivity {
 
-    double fs = 500;
+    double fs = 125;
     int order = 2; //order of the filter
     double lowCutOff = 0.67; //Lower Cut-off Frequency
     double highCutOff = 42; //Higher Cut-off Frequency
@@ -46,15 +46,15 @@ public class MainActivity extends AppCompatActivity {
 
         textView = findViewById(R.id.text);
         textView.setMovementMethod(new ScrollingMovementMethod());
-        //GraphView graph = (GraphView) findViewById(R.id.graph);
-        GraphView graph1 = findViewById(R.id.graph1);
+        GraphView graph = (GraphView) findViewById(R.id.graph);
+        //GraphView graph1 = findViewById(R.id.graph1);
 
 
         ArrayList<DataPoint> arrDataPoint;
         ArrayList<DataPoint> arrDataPoint1;
         ArrayList<DataPoint> arrDataPointd;
 
-        InputStream is = this.getResources().openRawResource(R.raw.ecg_data_1);
+        InputStream is = this.getResources().openRawResource(R.raw.output);
 
         ReadandStore RS = new ReadandStore();  //RS -> object created of class ReadandStore
         ArrayList<Double> AL = RS.ReadandStoring(is); // method accessed of class ReadandStore
@@ -107,14 +107,14 @@ public class MainActivity extends AppCompatActivity {
         //Robust Peak Detection.
         double sampling_rate =  fs;
         robustPeakDetection rpd = new robustPeakDetection();
-        //int heart_rate = rpd.heart_rate(slice_ecgdata_f2, fs);
+        int heart_rate = rpd.heart_rate(slice_ecgdata_f2, fs);
         ArrayList<Integer> R_pk = rpd.R_Peaks(slice_ecgdata_f2, sampling_rate);
         //ArrayList<Integer> Q_pk = rpd.q_peak_find(ecgdata, R_pk, 8,20, fs);
         //ArrayList<Integer> new_Rpk = rpd.Correct_rpeaks(slice_ecgdata_f2, R_pk, sampling_rate);
         ArrayList<DataPoint> arrDataPointp = new ArrayList<>();
         //ArrayList<DataPoint> arrDataPointq = new ArrayList<>();
 
-        double step = 20.0/(slice_ecgdata_f2.length);
+        double step = 60.0/(slice_ecgdata_f2.length);
         for(int i=0; i<R_pk.size(); i++){
                 DataPoint dp = new DataPoint(R_pk.get(i)*step, ecgdata[999+R_pk.get(i)]);
                 arrDataPointp.add(dp);
@@ -128,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         StringBuilder R = new StringBuilder();
+        R.append("Heart Rate : "+heart_rate+"\n\n");
         R.append("R peak = [ ");
         for(int i=0; i<R_pk.size(); i++){
             R.append(R_pk.get(i) + "  ");
@@ -153,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
             R.append(R_pk.get(i)+48 + "  ");
         }
         R.append(" ]");
+
         /*R.append("\n[");
         for(int i=0; i<Q_pk.size(); i++){
             R.append(Q_pk.get(i) + "  ");
@@ -206,12 +208,12 @@ public class MainActivity extends AppCompatActivity {
         //PointsGraphSeries<DataPoint> series3 = new PointsGraphSeries<>(listDpq);
 
         plottingofdata plot = new plottingofdata();
-        plot.plot_FILTEREDECG(series, graph1);
-        //plot.plot_RAWECG(series, graph);
-        plot.plotPeak(series2, graph1);
+        //plot.plot_FILTEREDECG(series, graph1);
+        plot.plot_RAWECG(series, graph);
+        //plot.plotPeak(series2, graph1);
         //plot.plotPeak(series3, graph1);
-        //plot.SetXYaxis(graph);
-        plot.SetXYaxis(graph1);
+        plot.SetXYaxis(graph);
+        //plot.SetXYaxis(graph1);
 
         textView.setText(R.toString());
         //textView.setText(Text.toString()+ '\n' + RR_Interval);

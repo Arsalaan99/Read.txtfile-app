@@ -63,7 +63,7 @@ public class peakDetection {
 
 
     public ArrayList<DataPoint> ArrayofDP_Peak(double[] result, double fs){
-        double step = 20.0/(result.length);   //total_time/no of samples.
+        double step = 60.0/(result.length);   //total_time/no of samples.
         double max = max(result);
         threshold =  max - 0.5*max;
 
@@ -95,7 +95,7 @@ public class peakDetection {
 
     public ArrayList<DataPoint> ArrayofDP_Signal(double[] result1, double fs){
         double val =0.0;
-        double step = 20.0/(result1.length);
+        double step = 60.0/(result1.length);
         ArrayList<DataPoint> arrDP = new ArrayList<>();
         for(int i=0; i<result1.length; i++){
             Array_of_sig.append(String.valueOf(result1[i]));
